@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KAYNET — Statistiques sondage</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* brand chrome (KAYNET) */
+    --navy-deep:#062456; --navy:#003a6c; --teal:#038190;
+    --mint:#0aa198; --mint-bright:#3fe0c8; --bg-light:#eef7f8;
+    --ink:#062456; --ink-soft:#3a5a86; --white:#ffffff; --line:#d9ebee;
+
+    /* dataviz tokens — validated default categorical palette (light) */
+    --surface-1:#fcfcfb; --text-primary:#0b0b0b; --text-secondary:#52514e;
+    --muted:#898781; --grid:#e1e0d9; --baseline:#c3c2b7;
+    --series-1:#2a78d6; --series-2:#eb6834; --series-3:#1baf7a;
+    --series-4:#eda100; --series-5:#e87ba4;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --surface-1:#1a1a19; --text-primary:#ffffff; --text-secondary:#c3c2b7;
+      --muted:#898781; --grid:#2c2c2a; --baseline:#383835;
+      --series-1:#3987e5; --series-2:#d95926; --series-3:#199e70;
+      --series-4:#c98500; --series-5:#d55181;
+      --bg-light:#0d1420; --white:#111a2b; --line:#1e2c3f; --ink:#eaf2f6; --ink-soft:#9db1c4;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --surface-1:#1a1a19; --text-primary:#ffffff; --text-secondary:#c3c2b7;
+    --muted:#898781; --grid:#2c2c2a; --baseline:#383835;
+    --series-1:#3987e5; --series-2:#d95926; --series-3:#199e70;
+    --series-4:#c98500; --series-5:#d55181;
+    --bg-light:#0d1420; --white:#111a2b; --line:#1e2c3f; --ink:#eaf2f6; --ink-soft:#9db1c4;
+    color-scheme: dark;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg-light);color:var(--ink);font-family:'Manrope',-apple-system,sans-serif;}
+  .wrap{max-width:900px;margin:0 auto;padding:0 20px 60px}
+  .wordmark{font-family:'Poppins',sans-serif;font-weight:700}
+
+  .topbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;padding:22px 0 18px}
+  .logo-row{display:flex;align-items:center;gap:10px}
+  .logo-row img{width:38px;height:38px}
+  .logo-row .name{font-size:1.2rem;line-height:1}
+  .logo-row .name .kay{color:var(--navy)} .logo-row .name .net{color:var(--mint)}
+  .refresh{font-family:'Manrope',sans-serif;font-weight:700;font-size:.8rem;border:1.5px solid var(--line);background:var(--white);color:var(--navy);border-radius:9px;padding:8px 14px;cursor:pointer}
+
+  .hero{background:linear-gradient(150deg,var(--navy-deep) 0%,var(--navy) 38%,var(--teal) 78%,var(--mint) 130%);border-radius:18px;color:#fff;padding:22px 24px;margin-bottom:22px;display:flex;flex-wrap:wrap;gap:18px;}
+  .stat{min-width:110px}
+  .stat .n{font-family:'Poppins',sans-serif;font-weight:800;font-size:1.9rem;line-height:1;font-variant-numeric:tabular-nums}
+  .stat .l{font-size:.68rem;text-transform:uppercase;letter-spacing:.05em;color:#bcd6ea;margin-top:4px}
+
+  #state{padding:40px 0;text-align:center;color:var(--ink-soft);font-size:.9rem}
+
+  .qcard{background:var(--surface-1);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-bottom:16px;}
+  .qcard h2{font-family:'Poppins',sans-serif;font-size:.98rem;color:var(--ink);margin:0 0 14px;line-height:1.35;}
+  .bar-row{display:grid;grid-template-columns:minmax(90px,150px) 1fr 60px;align-items:center;gap:10px;margin-bottom:9px;position:relative;}
+  .bar-row:last-child{margin-bottom:0}
+  .bar-label{font-size:.8rem;color:var(--text-secondary);text-align:right;line-height:1.3;}
+  .bar-track{height:16px;background:var(--grid);border-radius:4px;position:relative;overflow:hidden;}
+  .bar-fill{height:100%;border-radius:4px;min-width:4px;transition:width .5s ease;}
+  .bar-value{font-size:.78rem;color:var(--text-primary);font-weight:600;font-variant-numeric:tabular-nums;}
+  .bar-row[data-tip]{cursor:default}
+  .tooltip{
+    position:absolute; top:-30px; left:50%; transform:translateX(-50%);
+    background:var(--navy-deep); color:#fff; font-size:.7rem; font-weight:600;
+    padding:4px 8px; border-radius:6px; white-space:nowrap; opacity:0; pointer-events:none;
+    transition:opacity .12s ease; font-family:'Manrope',sans-serif;
+  }
+  .bar-track:hover .tooltip{opacity:1}
+
+  .daybar-wrap{display:flex; align-items:flex-end; gap:8px;}
+  .daybar-col{flex:1; display:flex; flex-direction:column; align-items:center;}
+  .daybar-box{width:100%; height:70px; display:flex; align-items:flex-end;}
+  .daybar{width:100%; background:var(--series-1); border-radius:3px 3px 0 0;}
+  .daybar-label{font-size:.62rem; color:var(--muted); text-align:center; margin-top:5px;}
+
+  footer{text-align:center;padding-top:26px;border-top:1px solid var(--line);margin-top:20px}
+  footer p{font-size:.72rem;color:var(--ink-soft);margin:0}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="topbar">
+    <div class="logo-row">
+      <img src="logo.png" alt="KAYNET">
+      <div class="name wordmark"><span class="kay">KAY</span><span class="net">net</span></div>
+    </div>
+    <button class="refresh" id="refreshBtn">↻ Actualiser</button>
+  </div>
+
+  <div class="hero">
+    <div class="stat"><div class="n" id="statTotal">—</div><div class="l">Réponses totales</div></div>
+    <div class="stat"><div class="n" id="statDays">—</div><div class="l">Jours actifs</div></div>
+    <div class="stat"><div class="n" id="statToday">—</div><div class="l">Aujourd'hui</div></div>
+  </div>
+
+  <div id="state">Chargement des statistiques…</div>
+  <div id="dayChartCard" class="qcard" hidden>
+    <h2>Réponses par jour</h2>
+    <div class="daybar-wrap" id="dayBars"></div>
+  </div>
+  <div id="questions"></div>
+
+  <footer><p>KAYNET — statistiques internes, données agrégées et anonymisées</p></footer>
+</div>
+
+<script>
+(function(){
+  // ⚠️ Set this once the Apps Script Web App is deployed (see Sondage-KAYNET-dashboard-api.gs)
+  var API_URL = "PENDING_DEPLOY_URL";
+
+  var SERIES = ['var(--series-1)','var(--series-2)','var(--series-3)','var(--series-4)','var(--series-5)'];
+
+  function esc(s){ var d=document.createElement('div'); d.textContent=s; return d.innerHTML; }
+
+  function renderQuestion(q){
+    var counts = q.counts;
+    var entries = Object.keys(counts).map(function(k){ return [k, counts[k]]; });
+    var total = entries.reduce(function(s,e){ return s+e[1]; }, 0);
+    var max = Math.max.apply(null, entries.map(function(e){ return e[1]; }));
+
+    var card = document.createElement('div');
+    card.className = 'qcard';
+    var h2 = document.createElement('h2');
+    h2.textContent = q.title;
+    card.appendChild(h2);
+
+    entries.forEach(function(e, i){
+      var label = e[0], count = e[1];
+      var pct = total ? Math.round(count/total*100) : 0;
+      var widthPct = max ? Math.max(3, Math.round(count/max*100)) : 0;
+      var color = SERIES[i % SERIES.length];
+
+      var row = document.createElement('div');
+      row.className = 'bar-row';
+
+      var lab = document.createElement('div');
+      lab.className = 'bar-label';
+      lab.textContent = label;
+
+      var track = document.createElement('div');
+      track.className = 'bar-track';
+      var fill = document.createElement('div');
+      fill.className = 'bar-fill';
+      fill.style.width = widthPct + '%';
+      fill.style.background = color;
+      var tip = document.createElement('div');
+      tip.className = 'tooltip';
+      tip.textContent = count + ' réponse' + (count>1?'s':'') + ' · ' + pct + '%';
+      track.appendChild(fill);
+      track.appendChild(tip);
+
+      var val = document.createElement('div');
+      val.className = 'bar-value';
+      val.textContent = count + ' · ' + pct + '%';
+
+      row.appendChild(lab);
+      row.appendChild(track);
+      row.appendChild(val);
+      card.appendChild(row);
+    });
+
+    return card;
+  }
+
+  function renderDayChart(byDay){
+    var days = Object.keys(byDay).sort();
+    if (days.length < 1) return;
+    document.getElementById('dayChartCard').hidden = false;
+    var wrap = document.getElementById('dayBars');
+    wrap.innerHTML = '';
+    var max = Math.max.apply(null, days.map(function(d){ return byDay[d]; }));
+    days.forEach(function(d){
+      var col = document.createElement('div');
+      col.className = 'daybar-col';
+
+      var box = document.createElement('div');
+      box.className = 'daybar-box';
+
+      var bar = document.createElement('div');
+      bar.className = 'daybar';
+      var h = max ? Math.max(4, Math.round(byDay[d]/max*70)) : 4;
+      bar.style.height = h + 'px';
+      bar.title = d + ' — ' + byDay[d] + ' réponse(s)';
+
+      var lab = document.createElement('div');
+      lab.className = 'daybar-label';
+      lab.textContent = d.slice(5); // MM-DD
+
+      box.appendChild(bar);
+      col.appendChild(box);
+      col.appendChild(lab);
+      wrap.appendChild(col);
+    });
+  }
+
+  function load(){
+    var state = document.getElementById('state');
+    state.hidden = false;
+    state.textContent = 'Chargement des statistiques…';
+    document.getElementById('questions').innerHTML = '';
+    document.getElementById('dayChartCard').hidden = true;
+
+    if (API_URL === "PENDING_DEPLOY_URL") {
+      state.innerHTML = 'Le tableau de bord attend d\'être connecté à l\'API des réponses.<br><span style="font-size:.78rem">Déploie <code>Sondage-KAYNET-dashboard-api.gs</code> comme Web App et donne l\'URL à Claude.</span>';
+      return;
+    }
+
+    fetch(API_URL).then(function(res){
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      return res.json();
+    }).then(function(data){
+      state.hidden = true;
+      document.getElementById('statTotal').textContent = data.total;
+      var days = Object.keys(data.byDay || {});
+      document.getElementById('statDays').textContent = days.length;
+      var today = new Date().toISOString().slice(0,10);
+      document.getElementById('statToday').textContent = (data.byDay && data.byDay[today]) || 0;
+
+      renderDayChart(data.byDay || {});
+
+      var qWrap = document.getElementById('questions');
+      data.questions.forEach(function(q){
+        if (Object.keys(q.counts).length === 0) return;
+        qWrap.appendChild(renderQuestion(q));
+      });
+    }).catch(function(err){
+      state.hidden = false;
+      state.textContent = 'Erreur de chargement (' + err.message + '). Réessaie dans un instant.';
+    });
+  }
+
+  document.getElementById('refreshBtn').addEventListener('click', load);
+  load();
+})();
+</script>
+</body>
+</html>
