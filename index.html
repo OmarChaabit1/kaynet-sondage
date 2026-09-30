@@ -68,6 +68,12 @@
   }
   .submit-btn:active{transform:translateY(1px)}
   .privacy-note{text-align:center;font-size:.74rem;color:var(--ink-soft);margin-top:10px;}
+  .error-note{text-align:center;font-size:.8rem;color:#b3261e;margin-top:10px;font-weight:600;}
+
+  .thanks{background:var(--white);border:1px solid #d9ebee;border-radius:18px;padding:40px 24px;text-align:center;margin-top:10px;}
+  .thanks-icon{width:56px;height:56px;border-radius:50%;background:var(--mint);color:#fff;font-size:1.6rem;line-height:56px;margin:0 auto 16px;}
+  .thanks h2{font-family:'Poppins',sans-serif;color:var(--navy-deep);margin:0 0 8px;}
+  .thanks p{font-size:.92rem;color:var(--ink-soft);line-height:1.55;max-width:38ch;margin:0 auto;}
 
   footer{text-align:center;padding-top:30px;border-top:1px solid #d9ebee;margin-top:30px}
   footer .fw{font-family:'Poppins',sans-serif;font-weight:700;font-size:.9rem}
@@ -92,10 +98,8 @@
     <p class="sub">2 minutes, anonyme, uniquement des clics. Tes réponses nous disent quoi construire en premier dans KAYNET.</p>
   </div>
 
-  <form action="https://api.web3forms.com/submit" method="POST">
-    <input type="hidden" name="access_key" value="92f351df-3f59-49c4-8c5a-c0a0da1f50de">
-    <input type="hidden" name="subject" value="Nouvelle réponse — Sondage KAYNET">
-    <input type="hidden" name="from_name" value="Sondage KAYNET">
+  <form id="sondageForm">
+    <input type="hidden" name="pageHistory" value="0,1,2,3">
     <input type="text" name="botcheck" style="display:none" tabindex="-1" autocomplete="off">
 
     <div class="section-tag">Ça va comment</div>
@@ -104,11 +108,11 @@
       <div class="num">Question 1</div>
       <div class="label">Sur 5, tu te sens comment depuis la rentrée ?</div>
       <div class="scale-row">
-        <div class="opt"><input type="radio" name="q1_humeur" value="1 - Pas bien" id="q1a" required><label for="q1a">😟<span class="cap">1</span></label></div>
-        <div class="opt"><input type="radio" name="q1_humeur" value="2" id="q1b"><label for="q1b">😕<span class="cap">2</span></label></div>
-        <div class="opt"><input type="radio" name="q1_humeur" value="3" id="q1c"><label for="q1c">😐<span class="cap">3</span></label></div>
-        <div class="opt"><input type="radio" name="q1_humeur" value="4" id="q1d"><label for="q1d">🙂<span class="cap">4</span></label></div>
-        <div class="opt"><input type="radio" name="q1_humeur" value="5 - Très bien" id="q1e"><label for="q1e">😄<span class="cap">5</span></label></div>
+        <div class="opt"><input type="radio" name="entry.1868796297" value="1 - Pas bien" id="q1a" required><label for="q1a">😟<span class="cap">1</span></label></div>
+        <div class="opt"><input type="radio" name="entry.1868796297" value="2" id="q1b"><label for="q1b">😕<span class="cap">2</span></label></div>
+        <div class="opt"><input type="radio" name="entry.1868796297" value="3" id="q1c"><label for="q1c">😐<span class="cap">3</span></label></div>
+        <div class="opt"><input type="radio" name="entry.1868796297" value="4" id="q1d"><label for="q1d">🙂<span class="cap">4</span></label></div>
+        <div class="opt"><input type="radio" name="entry.1868796297" value="5 - Très bien" id="q1e"><label for="q1e">😄<span class="cap">5</span></label></div>
       </div>
     </div>
 
@@ -116,11 +120,11 @@
       <div class="num">Question 2</div>
       <div class="label">Ta plus grande difficulté en ce moment ?</div>
       <div class="opts">
-        <div class="opt"><input type="radio" name="q2_difficulte" value="Solitude" id="q2a" required><label for="q2a">Solitude</label></div>
-        <div class="opt"><input type="radio" name="q2_difficulte" value="Pression des études" id="q2b"><label for="q2b">Pression des études</label></div>
-        <div class="opt"><input type="radio" name="q2_difficulte" value="Trouver ma place" id="q2c"><label for="q2c">Trouver ma place</label></div>
-        <div class="opt"><input type="radio" name="q2_difficulte" value="Loin de chez moi" id="q2d"><label for="q2d">Loin de chez moi</label></div>
-        <div class="opt"><input type="radio" name="q2_difficulte" value="Autre" id="q2e"><label for="q2e">Autre</label></div>
+        <div class="opt"><input type="radio" name="entry.1403463073" value="Solitude" id="q2a" required><label for="q2a">Solitude</label></div>
+        <div class="opt"><input type="radio" name="entry.1403463073" value="Pression des études" id="q2b"><label for="q2b">Pression des études</label></div>
+        <div class="opt"><input type="radio" name="entry.1403463073" value="Trouver ma place" id="q2c"><label for="q2c">Trouver ma place</label></div>
+        <div class="opt"><input type="radio" name="entry.1403463073" value="Loin de chez moi" id="q2d"><label for="q2d">Loin de chez moi</label></div>
+        <div class="opt"><input type="radio" name="entry.1403463073" value="Autre" id="q2e"><label for="q2e">Autre</label></div>
       </div>
     </div>
 
@@ -128,9 +132,9 @@
       <div class="num">Question 3</div>
       <div class="label">Tu as déjà des gens sur qui compter sur le campus ?</div>
       <div class="opts">
-        <div class="opt"><input type="radio" name="q3_soutien" value="Oui" id="q3a" required><label for="q3a">Oui</label></div>
-        <div class="opt"><input type="radio" name="q3_soutien" value="Un peu" id="q3b"><label for="q3b">Un peu</label></div>
-        <div class="opt"><input type="radio" name="q3_soutien" value="Pas encore" id="q3c"><label for="q3c">Pas encore</label></div>
+        <div class="opt"><input type="radio" name="entry.1245138261" value="Oui" id="q3a" required><label for="q3a">Oui</label></div>
+        <div class="opt"><input type="radio" name="entry.1245138261" value="Un peu" id="q3b"><label for="q3b">Un peu</label></div>
+        <div class="opt"><input type="radio" name="entry.1245138261" value="Pas encore" id="q3c"><label for="q3c">Pas encore</label></div>
       </div>
     </div>
 
@@ -140,11 +144,11 @@
       <div class="num">Question 4</div>
       <div class="label">Ton plus gros défi non résolu aujourd'hui ?</div>
       <div class="opts">
-        <div class="opt"><input type="radio" name="q4_defi" value="Logement" id="q4a" required><label for="q4a">Logement</label></div>
-        <div class="opt"><input type="radio" name="q4_defi" value="Me faire des amis" id="q4b"><label for="q4b">Me faire des amis</label></div>
-        <div class="opt"><input type="radio" name="q4_defi" value="M'orienter sur le campus" id="q4c"><label for="q4c">M'orienter sur le campus</label></div>
-        <div class="opt"><input type="radio" name="q4_defi" value="Suivre les cours" id="q4d"><label for="q4d">Suivre les cours</label></div>
-        <div class="opt"><input type="radio" name="q4_defi" value="Budget" id="q4e"><label for="q4e">Budget</label></div>
+        <div class="opt"><input type="radio" name="entry.1328686712" value="Logement" id="q4a" required><label for="q4a">Logement</label></div>
+        <div class="opt"><input type="radio" name="entry.1328686712" value="Me faire des amis" id="q4b"><label for="q4b">Me faire des amis</label></div>
+        <div class="opt"><input type="radio" name="entry.1328686712" value="M'orienter sur le campus" id="q4c"><label for="q4c">M'orienter sur le campus</label></div>
+        <div class="opt"><input type="radio" name="entry.1328686712" value="Suivre les cours" id="q4d"><label for="q4d">Suivre les cours</label></div>
+        <div class="opt"><input type="radio" name="entry.1328686712" value="Budget" id="q4e"><label for="q4e">Budget</label></div>
       </div>
     </div>
 
@@ -152,9 +156,9 @@
       <div class="num">Question 5</div>
       <div class="label">Un logement stable, c'est bon ?</div>
       <div class="opts">
-        <div class="opt"><input type="radio" name="q5_logement" value="Oui" id="q5a" required><label for="q5a">Oui</label></div>
-        <div class="opt"><input type="radio" name="q5_logement" value="Je cherche encore" id="q5b"><label for="q5b">Je cherche encore</label></div>
-        <div class="opt"><input type="radio" name="q5_logement" value="Pas concerné·e" id="q5c"><label for="q5c">Pas concerné·e</label></div>
+        <div class="opt"><input type="radio" name="entry.1142453447" value="Oui" id="q5a" required><label for="q5a">Oui</label></div>
+        <div class="opt"><input type="radio" name="entry.1142453447" value="Je cherche encore" id="q5b"><label for="q5b">Je cherche encore</label></div>
+        <div class="opt"><input type="radio" name="entry.1142453447" value="Pas concerné·e" id="q5c"><label for="q5c">Pas concerné·e</label></div>
       </div>
     </div>
 
@@ -162,9 +166,9 @@
       <div class="num">Question 6</div>
       <div class="label">Tu voudrais être accompagné·e par un « Lauréat » (étudiant plus avancé) ?</div>
       <div class="opts">
-        <div class="opt"><input type="radio" name="q6_laureat" value="Oui carrément" id="q6a" required><label for="q6a">Oui carrément</label></div>
-        <div class="opt"><input type="radio" name="q6_laureat" value="Peut-être" id="q6b"><label for="q6b">Peut-être</label></div>
-        <div class="opt"><input type="radio" name="q6_laureat" value="Pas besoin" id="q6c"><label for="q6c">Pas besoin</label></div>
+        <div class="opt"><input type="radio" name="entry.1219345992" value="Oui carrément" id="q6a" required><label for="q6a">Oui carrément</label></div>
+        <div class="opt"><input type="radio" name="entry.1219345992" value="Peut-être" id="q6b"><label for="q6b">Peut-être</label></div>
+        <div class="opt"><input type="radio" name="entry.1219345992" value="Pas besoin" id="q6c"><label for="q6c">Pas besoin</label></div>
       </div>
     </div>
 
@@ -174,11 +178,11 @@
       <div class="num">Question 7</div>
       <div class="label">Si une appli pouvait t'aider sur UNE seule chose là maintenant, ce serait quoi ?</div>
       <div class="opts">
-        <div class="opt"><input type="radio" name="q7_priorite" value="Trouver un logement" id="q7a" required><label for="q7a">Trouver un logement</label></div>
-        <div class="opt"><input type="radio" name="q7_priorite" value="Me faire des amis" id="q7b"><label for="q7b">Me faire des amis</label></div>
-        <div class="opt"><input type="radio" name="q7_priorite" value="Gérer le stress" id="q7c"><label for="q7c">Gérer le stress</label></div>
-        <div class="opt"><input type="radio" name="q7_priorite" value="M'orienter dans les cours" id="q7d"><label for="q7d">M'orienter dans les cours</label></div>
-        <div class="opt"><input type="radio" name="q7_priorite" value="Trouver un mentor" id="q7e"><label for="q7e">Trouver un mentor</label></div>
+        <div class="opt"><input type="radio" name="entry.1960297899" value="Trouver un logement" id="q7a" required><label for="q7a">Trouver un logement</label></div>
+        <div class="opt"><input type="radio" name="entry.1960297899" value="Me faire des amis" id="q7b"><label for="q7b">Me faire des amis</label></div>
+        <div class="opt"><input type="radio" name="entry.1960297899" value="Gérer le stress" id="q7c"><label for="q7c">Gérer le stress</label></div>
+        <div class="opt"><input type="radio" name="entry.1960297899" value="M'orienter dans les cours" id="q7d"><label for="q7d">M'orienter dans les cours</label></div>
+        <div class="opt"><input type="radio" name="entry.1960297899" value="Trouver un mentor" id="q7e"><label for="q7e">Trouver un mentor</label></div>
       </div>
     </div>
 
@@ -186,9 +190,9 @@
       <div class="num">Question 8</div>
       <div class="label">Tu utiliserais un assistant IA pour parler anonymement du stress ou de la solitude ?</div>
       <div class="opts">
-        <div class="opt"><input type="radio" name="q8_coach_ia" value="Oui" id="q8a" required><label for="q8a">Oui</label></div>
-        <div class="opt"><input type="radio" name="q8_coach_ia" value="Peut-être" id="q8b"><label for="q8b">Peut-être</label></div>
-        <div class="opt"><input type="radio" name="q8_coach_ia" value="Non" id="q8c"><label for="q8c">Non</label></div>
+        <div class="opt"><input type="radio" name="entry.692181424" value="Oui" id="q8a" required><label for="q8a">Oui</label></div>
+        <div class="opt"><input type="radio" name="entry.692181424" value="Peut-être" id="q8b"><label for="q8b">Peut-être</label></div>
+        <div class="opt"><input type="radio" name="entry.692181424" value="Non" id="q8c"><label for="q8c">Non</label></div>
       </div>
     </div>
 
@@ -198,21 +202,27 @@
       <div class="num">Question 9</div>
       <div class="label">Tu inviterais un·e ami·e ou coloc si ça rendait l'appli plus utile pour vous deux ?</div>
       <div class="opts">
-        <div class="opt"><input type="radio" name="q9_invite" value="Oui" id="q9a" required><label for="q9a">Oui</label></div>
-        <div class="opt"><input type="radio" name="q9_invite" value="Peut-être" id="q9b"><label for="q9b">Peut-être</label></div>
-        <div class="opt"><input type="radio" name="q9_invite" value="Non" id="q9c"><label for="q9c">Non</label></div>
+        <div class="opt"><input type="radio" name="entry.950515055" value="Oui" id="q9a" required><label for="q9a">Oui</label></div>
+        <div class="opt"><input type="radio" name="entry.950515055" value="Peut-être" id="q9b"><label for="q9b">Peut-être</label></div>
+        <div class="opt"><input type="radio" name="entry.950515055" value="Non" id="q9c"><label for="q9c">Non</label></div>
       </div>
     </div>
 
     <div class="contact-box">
       <div class="label">On te prévient dès le lancement ? (facultatif)</div>
       <div class="hint">WhatsApp ou email — rien d'obligatoire.</div>
-      <input type="text" name="contact_optionnel" placeholder="06 XX XX XX XX ou email">
+      <input type="text" name="entry.1131077789" placeholder="06 XX XX XX XX ou email">
     </div>
 
-    <button type="submit" class="submit-btn">Envoyer mes réponses</button>
+    <button type="submit" class="submit-btn" id="submitBtn">Envoyer mes réponses</button>
     <p class="privacy-note">Aucune inscription. Réponses anonymes sauf si tu laisses un contact.</p>
   </form>
+
+  <div class="thanks" id="thanksBox" hidden>
+    <div class="thanks-icon">✓</div>
+    <h2>Merci !</h2>
+    <p>Tes réponses sont bien enregistrées. C'est exactement ce genre de retour qui nous dit quoi construire en premier.</p>
+  </div>
 
   <footer>
     <div class="fw"><span class="kay">KAY</span><span class="net">net</span></div>
@@ -220,5 +230,33 @@
   </footer>
 
 </div>
+
+<script>
+(function(){
+  var GOOGLE_FORM_ACTION = "https://docs.google.com/forms/d/e/1FAIpQLSeO3_Lm70BsjsOB6rFLH15YASc7YxY9vT2vZzO1-GXZkpZD_w/formResponse";
+  var form = document.getElementById('sondageForm');
+  var btn = document.getElementById('submitBtn');
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    if (form.botcheck.value) return; // honeypot tripped, silently drop
+
+    var fd = new FormData(form);
+    fd.delete('botcheck');
+
+    btn.disabled = true;
+    btn.textContent = "Envoi...";
+
+    fetch(GOOGLE_FORM_ACTION, { method: "POST", mode: "no-cors", body: fd })
+      .finally(function(){
+        // no-cors gives an opaque response (can't read success/failure),
+        // but Google's formResponse endpoint reliably accepts well-formed posts
+        form.hidden = true;
+        document.getElementById('thanksBox').hidden = false;
+        window.scrollTo({top: 0, behavior: 'smooth'});
+      });
+  });
+})();
+</script>
 </body>
 </html>
